@@ -3,6 +3,7 @@
 # App (Project) Name
 name = "Hangman"
 
+
 # Dioxus App Default Platform
 # desktop, web, mobile, ssr
 default_platform = "desktop"
@@ -31,7 +32,7 @@ watch_path = ["src", "public"]
 
 # CSS style file
 
-style = ["input.css"]
+style = ["/home/andrey/code/HangMan/input.css"]
 
 # Javascript code file
 script = []
@@ -41,3 +42,6 @@ script = []
 # Javascript code file
 # serve: [dev-server] only
 script = []
+
+[bundler]
+icon = ["/home/andrey/code/HangMan/public/AppImage.jpeg"]

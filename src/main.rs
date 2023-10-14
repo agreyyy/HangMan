@@ -1,9 +1,10 @@
 #![allow(non_snake_case)]
 
-use std::vec;
+use std::{vec, fs};
 use dioxus::prelude::*;
 
 mod hangman;
+use dioxus_desktop::{Config, WindowBuilder, tao::{dpi::{Size, Pixel}, window::Icon}, PhysicalSize};
 use rand::Rng;
 use random_word::Lang;
 
@@ -12,6 +13,10 @@ use crate::hangman::{KeyBoard,Hangman};
 pub const MAXIMUM_WRONG_GUESSES: usize = 10;
 
 fn main() {  
+    // let ico = fs::read("/home/andrey/code/HangMan/public/AppImage.jpeg").expect("ICON PATH IS WRONG");
+    // let w = WindowBuilder::new().with_title("Hangman")
+    //     .with_window_icon(Some(Icon::from_rgba(ico,256,256).expect("icon failed")));
+    // let cfg = Config::new().with_window(w);
     dioxus_desktop::launch(Home);
 }
 
@@ -28,7 +33,7 @@ fn Home(cx: Scope) -> Element {
 
     
     cx.render(rsx!(     
-        link {href:"input.css", rel: "stylesheet" },   
+        link {href:"HangMan/input.css", rel: "stylesheet" },   
         body {     
 
             style: r#"
@@ -109,6 +114,7 @@ fn Home(cx: Scope) -> Element {
                 class: "play-again",
                 disabled: !*game_ended.get(),
                 onclick: |_| {
+                    //sets all states back to original value
                     reset_flag.set(!*reset_flag.get());
                     counter.set(0);
 
@@ -132,7 +138,7 @@ fn Home(cx: Scope) -> Element {
 }
 
 fn get_new_word() -> Vec<char> {
-    //get word from some sort of dictionary lookup thing 
+    //gets a random word that is 5 to 15 characters long
     let new_word_len: usize = rand::thread_rng().gen_range(5..15);
     let new_word = random_word::gen_len(new_word_len, Lang::En).unwrap_or("ummmmmmm");
     new_word.chars().collect::<Vec<char>>()
@@ -145,17 +151,18 @@ fn make_empty_guess_buffer(len: usize) -> Vec<char> {
 }
 
 fn format_word(word: &Vec<char>) -> String {
-    let word_representation: String = word.iter().map(|ch| {
+    let str_representation: String = word.iter().map(|ch| {
         ch.to_string() + " "
     }).collect();
 
-    format!("{}",word_representation)
+    format!("{}",str_representation)
 }
 
 trait ContainsAny {
     fn contains_any(&self, compare_to: char) -> Vec<usize>;
 }
 
+//searches for all indexes in char vec which contain a value
 impl ContainsAny for Vec<char> {
     fn contains_any(&self, compare_to: char) -> Vec<usize> {
         let mut ptrs = vec![];

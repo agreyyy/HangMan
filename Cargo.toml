@@ -1,8 +1,13 @@
 [package]
-name = "exam-builderv2"
-version = "0.1.0"
-authors = ["andrey"]
+name = "HangMan"
+version = "1.0.0"
+authors = ["Andrey Greyze"]
 edition = "2021"
+
+[package.metadata.bundle]
+icon = "/home/andrey/code/HangMan/public/AppImage.jpeg"
+short_description = "a compact and free Hangman game to play anywhere"
+category = "game"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

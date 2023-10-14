@@ -1,19 +1,20 @@
 use std::vec;
 use dioxus::prelude::*;
 
+//component for managing the image of the hangman
 #[inline_props]
 pub fn Hangman(cx:Scope, stage: usize, reset_image: bool) -> Element {
     
     let css_status = use_ref(cx, || {vec![true;11]});    
 
+    //changes the hidden status of the next image in queque when the user makes a guess
     use_memo(cx, stage, |stage| {
         
         css_status.with_mut(|current_list| {
             if stage >= current_list.len() {
                 panic!("SHOULDNT ALLOW THE USER TO MAKE MORE THAN 10 GUESSES");
             } else {
-                current_list.remove(stage);
-                current_list.insert(stage, false);
+                current_list[stage] = false;
             }
         })   
     });
@@ -25,7 +26,7 @@ pub fn Hangman(cx:Scope, stage: usize, reset_image: bool) -> Element {
     });
 
     render!(rsx!(
-        link { rel: "stylesheet", href: "/home/andrey/code/exam-builderv2/input.css"}
+        link { rel: "stylesheet", href: "HangMan/input.css"}
         div {
             class: "hangman-container",
 
@@ -64,8 +65,6 @@ pub fn KeyBoard<'a>(cx: Scope, onguess: EventHandler<'a, char>, reset_game: bool
         key_row_1.with_mut(|list| {*list = vec![false;10]});
         key_row_2.with_mut(|list| {*list = vec![false;9]});
         key_row_3.with_mut(|list| {*list = vec![false;7]});
-    
-        cx.needs_update();
     });
 
     cx.render(rsx!(
@@ -81,7 +80,7 @@ pub fn KeyBoard<'a>(cx: Scope, onguess: EventHandler<'a, char>, reset_game: bool
             
             div {
                 class: "key-row1",
-                key_row_1.with(|states| states.clone()).iter().enumerate().map(|(idx,is_disabled)| {
+                key_row_1.read().iter().enumerate().map(|(idx,is_disabled)| {
                     rsx!( 
                     button {
                         class: "key",
@@ -119,7 +118,7 @@ pub fn KeyBoard<'a>(cx: Scope, onguess: EventHandler<'a, char>, reset_game: bool
         
         div {
             class: "key-row3",
-            key_row_3.with(|l|{l.clone()}).iter().enumerate().map(|(idx,is_disabled)| {
+            key_row_3.read().iter().enumerate().map(|(idx,is_disabled)| {
                 rsx!( 
                     button {
                         class: "key",
